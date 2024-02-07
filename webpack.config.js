@@ -28,7 +28,7 @@ export default (env, argv) => {
               comments: true,
             },
             mangle: {
-              reserved: ['MY_ADDON'],
+              reserved: ['SAMPLE_ADDON'],
             },
           },
         }),
@@ -40,19 +40,19 @@ export default (env, argv) => {
         banner: () => {
           return '/*! \n'
             + '@preserve\n'
-            + '@rootVar: MY_ADDON\n'
-            + '@name: My Addon\n'
+            + '@rootVar: SAMPLE_ADDON\n'
+            + '@name: Sample Addon\n'
             + '@version: 1.0.0\n'
-            + '@description: \n'
+            + '@description: Sample add-on will build task table\n'
             + '@requiredElabVersion:\n'
             + '@author: AОByte\n'
-            + '@class: TranslationService\n'
+            + '@class: SampleAddon\n'
             + '@capabilities:\n'
             + '@consentMessage:\n'
-            + '@description: My Addon description\n'
+            + '@description: Sample Addon description\n'
             + '@requiredDependencies:\n'
             + '*/ \n'
-            + 'var MY_ADDON = {};';
+            + 'var SAMPLE_ADDON = {};';
         },
       }),
     ],
