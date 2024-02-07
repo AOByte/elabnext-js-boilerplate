@@ -1,5 +1,6 @@
 {
-  "extends": "airbnb",
+  "plugins": ["jest"],
+  "extends": [ "airbnb", "eslint:recommended", "plugin:jest/recommended"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
@@ -8,7 +9,8 @@
     "browser": true,
     "commonjs": true,
     "es6": true,
-    "jquery": true
+    "jquery": true,
+    "jest": true
   },
   "globals": {
     "Dialog": "readonly",
@@ -28,7 +30,10 @@
     "arrow-body-style": "off",
     "operator-assignment": "off",
     "prefer-destructuring": "off",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "max-len": ["error", { "code": 100, "ignoreComments": true }]
   },
   "overrides": [
     {
@@ -37,6 +42,13 @@
       ],
       "rules": {
         "import/prefer-default-export": "off"
+      }
+    },
+    {
+      "files": ["tests/**/*"],
+      "plugins": ["jest"],
+      "env": {
+        "jest/globals": true
       }
     }
   ]
