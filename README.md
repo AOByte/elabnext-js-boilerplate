@@ -12,6 +12,9 @@ To build the Add-on, follow these steps:
 
 ```npm run build:dev```
 
+### Run Tests
+
+```npm run test```
 
 ### Serve the Add-on JS file
 
