@@ -98,7 +98,10 @@ export const fillTable = async (table) => {
  * @param {Event} e - Optional event object. If provided, prevents the default action.
  */
 export const renderTaskList = (e) => {
-  e && e.preventDefault();
+  if (e) {
+    e.preventDefault();
+  }
+
   window.history.pushState('', '', '?page=tasks');
 
   const button = createButton();

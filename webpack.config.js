@@ -6,7 +6,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default (env, argv) => {
+export default (env) => {
   const isProduction = env.NODE_ENV === 'production';
 
   return {
