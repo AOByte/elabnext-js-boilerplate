@@ -9,7 +9,7 @@ export const DIALOG_CONFIGS = {
     customButtonLabel: 'Delete Task',
     customButtonStyle: 'background:#fe810',
   },
-  UPDATE: {
+  CREATE: {
     title: 'Add New Task',
     width: '550',
     btnOk: false,
