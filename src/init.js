@@ -1,4 +1,5 @@
-import { renderTasks, renderTaskList } from './dom.js';
+import { renderTaskButton, renderTaskList, addDeleteBtnListener } from './dom.js';
+import { getTasks } from './api.js';
 
 /**
  * Initializes the application with the provided configuration and
@@ -12,19 +13,21 @@ export default function (config) {
   // Set the options for the application using the provided configuration
   self.setOptions(config);
 
-  // Execute the following code when the document is fully loaded
   $(document).ready(() => {
     // Extract query parameters from the current URL
     const params = new URLSearchParams(window.location.search);
     // Retrieve the value of the 'page' parameter from the query string
     const page = params.get('page');
 
-    // If the value of the 'page' parameter is 'tasks', render the task list
     if (page === 'tasks') {
-      renderTaskList();
+      getTasks().then(({ data }) => {
+        renderTaskList(data);
+
+        addDeleteBtnListener();
+      });
     }
 
     // Render tasks regardless of the current page
-    renderTasks();
+    renderTaskButton();
   });
 }

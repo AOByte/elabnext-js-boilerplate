@@ -1,4 +1,4 @@
-import { showDialog, deleteAction, updateActions } from './modal.js';
+import { showDialog, deleteTaskAction, createTaskAction } from './modal.js';
 import { getTasks } from './api.js';
 import { DIALOG_CONFIGS } from './constants.js';
 
@@ -8,11 +8,11 @@ import { DIALOG_CONFIGS } from './constants.js';
  * and an action to show a dialog for updating tasks.
  * @returns {eLabSDK.GUI.Button} - A button element configured to add a new task when clicked.
  */
-export const createButton = () => {
+export const createAddTaskButton = () => {
   return new eLabSDK.GUI.Button({
     label: 'Add New Task',
     class: 'addNewTaskBtn',
-    action: () => showDialog(DIALOG_CONFIGS.UPDATE, updateActions),
+    action: () => showDialog(DIALOG_CONFIGS.CREATE, createTaskAction),
   });
 };
 
@@ -22,7 +22,7 @@ export const createButton = () => {
  * and columns for displaying task information.
  * @returns {HTMLElement} - A table element configured to display task information.
  */
-export const createTable = () => {
+export const createTaskTable = () => {
   return Helper.Table.create({
     target: 'tableContainer',
     caption: null,
@@ -57,10 +57,10 @@ export const createTable = () => {
         key: 'actions',
         width: '5%',
         cellRender: ({ taskID }) => `
-            <p class='deleteTranslationIcon deleteBtn' _dataId="${taskID}">
-              <i class='fa fa-trash-alt _actionIcon' title='Delete translation'></i>
-            </p>
-          `,
+          <p class='deleteTranslationIcon deleteBtn' _dataId="${taskID}">
+            <i class='fa fa-trash-alt _actionIcon' title='Delete translation'></i>
+          </p>
+        `,
       },
     ],
   });
@@ -70,26 +70,12 @@ export const createTable = () => {
  * Attaches a click event listener to elements with the 'deleteBtn' class
  * @returns {void}
  */
-const addListener = () => {
+export const addDeleteBtnListener = () => {
   $('.deleteBtn').on('click', (e) => {
     const id = e.currentTarget.getAttribute('_dataId');
 
-    showDialog(DIALOG_CONFIGS.DELETE, () => deleteAction(id));
+    showDialog(DIALOG_CONFIGS.DELETE, () => deleteTaskAction(id));
   });
-};
-
-/**
- * Fills the specified table with task data retrieved asynchronously from the server.
- * @param {HTMLElement} table - The table element to be filled with task data.
- * @returns {Promise<void>} - A Promise that resolves after the table is filled with data.
- */
-export const fillTable = async (table) => {
-  const { data } = await getTasks();
-
-  table.data = data;
-  table._renderHTML();
-
-  addListener();
 };
 
 /**
@@ -97,20 +83,23 @@ export const fillTable = async (table) => {
  * filling the table with task data, and updating the main content section with the table container.
  * @param {Event} e - Optional event object. If provided, prevents the default action.
  */
-export const renderTaskList = (e) => {
-  if (e) {
-    e.preventDefault();
-  }
-
-  window.history.pushState('', '', '?page=tasks');
-
-  const button = createButton();
-  const table = createTable();
-  fillTable(table);
-
+export const renderTaskList = (data) => {
+  const button = createAddTaskButton();
   $('#main-content')
     .html('<section id="tableContainer"></section>')
     .prepend(button.render());
+
+  const table = createTaskTable();
+  table.data = data;
+  table._renderHTML();
+};
+
+export const onTaskButtonClick = async (e) => {
+  e.preventDefault();
+  window.history.pushState('', '', '?page=tasks');
+  const { data } = await getTasks();
+  renderTaskList(data);
+  addDeleteBtnListener();
 };
 
 /**
@@ -118,8 +107,8 @@ export const renderTaskList = (e) => {
  * attaching a click event handler.
  * When the button is clicked, it triggers the rendering of the task list.
  */
-export const renderTasks = () => {
+export const renderTaskButton = () => {
   $('#btnJournal ul').append('<li><a href="#" id="btnAddTask">Tasks</a></li>');
 
-  $('#btnAddTask').on('click', renderTaskList);
+  $('#btnAddTask').on('click', onTaskButtonClick);
 };

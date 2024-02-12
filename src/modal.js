@@ -6,19 +6,18 @@ import { addTask, deleteTask } from './api.js';
  * @param {string} taskId - The ID of the task to be deleted.
  * @returns {Promise<void>} - A Promise that resolves after the task deletion and page reload.
  */
-export const deleteAction = async (taskId) => {
+export const deleteTaskAction = async (taskId) => {
   await deleteTask(taskId);
   Dialog.closeWait();
   window.location.reload();
 };
 
 /**
- * Updates actions by retrieving title and description inputs,
- * adding a new task with the provided title and description,
+ * Adding a new task with the provided title and description,
  * closing the dialog window, and reloading the current page.
  * @returns {Promise<void>} A promise that resolves once the actions are updated.
  */
-export const updateActions = async () => {
+export const createTaskAction = async () => {
   const title = $('#title').val();
   const description = $('#description').val();
 
