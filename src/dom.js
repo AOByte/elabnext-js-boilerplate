@@ -1,5 +1,4 @@
 import { showDialog, deleteTaskAction, createTaskAction } from './modal.js';
-import { getTasks } from './api.js';
 import { DIALOG_CONFIGS } from './constants.js';
 
 /**
@@ -67,6 +66,20 @@ export const createTaskTable = () => {
 };
 
 /**
+ * Creates a custom page for tasks using eLabSDK.
+ * This function initializes a new CustomPage object with specified configurations.
+ * @returns {CustomPage} A CustomPage object representing the task page.
+ */
+export const renderTaskPage = () => {
+  return new eLabSDK.CustomPage({
+    rootVar: '.nav-main-level',
+    pageID: 'tasks',
+    mainMenu: 'Tasks',
+    subMenu: 'Task list',
+  });
+};
+
+/**
  * Attaches a click event listener to elements with the 'deleteBtn' class
  * @returns {void}
  */
@@ -83,7 +96,7 @@ export const addDeleteBtnListener = () => {
  * filling the table with task data, and updating the main content section with the table container.
  * @param {Event} e - Optional event object. If provided, prevents the default action.
  */
-export const renderTaskList = (data) => {
+export const renderTaskTable = (data) => {
   const button = createAddTaskButton();
   $('#main-content')
     .html('<section id="tableContainer"></section>')
@@ -92,23 +105,4 @@ export const renderTaskList = (data) => {
   const table = createTaskTable();
   table.data = data;
   table._renderHTML();
-};
-
-export const onTaskButtonClick = async (e) => {
-  e.preventDefault();
-  window.history.pushState('', '', '?page=tasks');
-  const { data } = await getTasks();
-  renderTaskList(data);
-  addDeleteBtnListener();
-};
-
-/**
- * Renders the tasks UI by appending a button to the journal section and
- * attaching a click event handler.
- * When the button is clicked, it triggers the rendering of the task list.
- */
-export const renderTaskButton = () => {
-  $('#btnJournal ul').append('<li><a href="#" id="btnAddTask">Tasks</a></li>');
-
-  $('#btnAddTask').on('click', onTaskButtonClick);
 };

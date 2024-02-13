@@ -1,4 +1,8 @@
-import { renderTaskButton, renderTaskList, addDeleteBtnListener } from './dom.js';
+import {
+  renderTaskTable,
+  addDeleteBtnListener,
+  renderTaskPage,
+} from './dom.js';
 import { getTasks } from './api.js';
 
 /**
@@ -14,20 +18,18 @@ export default function (config) {
   self.setOptions(config);
 
   $(document).ready(() => {
-    // Extract query parameters from the current URL
-    const params = new URLSearchParams(window.location.search);
-    // Retrieve the value of the 'page' parameter from the query string
-    const page = params.get('page');
+    const currentPage = Helper.History.get('pageID');
 
-    if (page === 'tasks') {
+    const pageID = currentPage || new URLSearchParams(window.location.search).get('pageID');
+
+    renderTaskPage();
+
+    if (pageID === 'tasks') {
       getTasks().then(({ data }) => {
-        renderTaskList(data);
+        renderTaskTable(data);
 
         addDeleteBtnListener();
       });
     }
-
-    // Render tasks regardless of the current page
-    renderTaskButton();
   });
 }
