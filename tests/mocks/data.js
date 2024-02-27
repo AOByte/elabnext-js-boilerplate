@@ -23,11 +23,6 @@ export const tasksMockResponse = {
   isMocked: true,
 };
 
-export const mockTable = {
-  data: null,
-  _renderHTML: jest.fn(),
-};
-
 export const tableContainer = {
   target: 'tableContainer',
   caption: null,

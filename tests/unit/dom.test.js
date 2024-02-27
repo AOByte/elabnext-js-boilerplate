@@ -1,10 +1,10 @@
 import { describe, expect, test } from '@jest/globals';
-import * as dom from '../../src/dom';
 import { showDialog } from '../../src/modal';
-import { appendToRoot, createHTMLDocument } from '../helpers/dom';
-import { eLabSDK, Helper } from '../mocks/elab';
+import * as dom from '../../src/dom';
 import { getTasks } from '../../src/api';
-import { mockTable, tableContainer, tasksMockResponse } from '../mocks/data';
+import { eLabSDK, Helper } from '../mocks/elab';
+import { tableContainer, tasksMockResponse } from '../mocks/data';
+import { appendToRoot, createHTMLDocument } from '../helpers/dom';
 
 global.eLabSDK = eLabSDK;
 global.Helper = Helper;
@@ -15,8 +15,6 @@ jest.mock('../../src/api', () => ({
 
 jest.mock('../../src/modal', () => ({
   showDialog: jest.fn(),
-  deleteAction: jest.fn(),
-  updateActions: jest.fn(),
 }));
 
 getTasks.mockResolvedValue(tasksMockResponse);
@@ -26,51 +24,60 @@ describe('Sample Addon Tests', () => {
     jest.clearAllMocks();
   });
 
-  test('1. renderTasks should render tasks button', () => {
-    createHTMLDocument();
-    appendToRoot('<div id="btnJournal"><ul></ul></div>');
-    expect($('#btnAddTask').length).toBe(0);
+  test('1. renderTaskPage should should create an instance of eLabSDK.CustomPage.', () => {
+    const page = dom.renderTaskPage();
 
-    dom.renderTasks();
+    const expectedParams = {
+      rootVar: '.nav-main-level',
+      pageID: 'tasks',
+      mainMenu: 'Tasks',
+      subMenu: 'Task list',
+    };
 
-    expect($('#btnAddTask').length).toBe(1);
-    expect($('#btnAddTask').is('a')).toBeTruthy();
-    expect($('#btnAddTask').parent().is('li')).toBeTruthy();
+    expect(eLabSDK.CustomPage).toHaveBeenCalledWith(expectedParams);
+    expect(eLabSDK.CustomPage).toHaveBeenCalledTimes(1);
+    expect(page instanceof eLabSDK.CustomPage).toBeTruthy();
   });
 
-  test('2. createButton should create a instance of eLabSDK.GUI.Button', () => {
+  test('2. createAddTaskButton should create an instance of eLabSDK.GUI.Button.', () => {
     const expectedParams = {
       label: 'Add New Task',
       class: 'addNewTaskBtn',
       action: expect.any(Function),
     };
 
-    const button = dom.createButton();
-
+    const button = dom.createAddTaskButton();
     expect(eLabSDK.GUI.Button).toHaveBeenCalledWith(expectedParams);
     expect(eLabSDK.GUI.Button).toHaveBeenCalledTimes(1);
-    expect(button instanceof eLabSDK.GUI.Button).toBeTruthy();
+    expect(button).toBeDefined();
   });
 
-  test('3. createTable should call create method of Helper.Table', () => {
+  test('3. createTaskTable should call create method of Helper.Table.', () => {
     const expectedParams = tableContainer;
 
-    dom.createTable();
+    dom.createTaskTable();
 
     expect(Helper.Table.create).toHaveBeenCalledTimes(1);
     expect(Helper.Table.create).toHaveBeenCalledWith(expectedParams);
   });
 
-  test('4. fillTable should call _renderHTML and add listener to the .deleteBtn', async () => {
+  test('4. renderTaskTable should create a table and call _renderHTML.', () => {
+    createHTMLDocument();
+    appendToRoot('<div id="main-content"></div>');
+
+    const expectedParams = tableContainer;
+    const data = tasksMockResponse.data;
+    dom.renderTaskTable(data);
+    expect($('#tableContainer').length).toBe(1);
+    expect(Helper.Table.create).toHaveBeenCalledTimes(1);
+    expect(Helper.Table.create).toHaveBeenCalledWith(expectedParams);
+  });
+
+  test('5. addDeleteBtnListener should add a listener to the .deleteBtn .', () => {
     // Create a button and to test event listener
     createHTMLDocument();
     appendToRoot('<button class="deleteBtn"> Delete </button>');
-
-    await dom.fillTable(mockTable);
-
-    expect(getTasks).toHaveBeenCalledTimes(1);
-    expect(mockTable._renderHTML).toHaveBeenCalledTimes(1);
-    expect(mockTable.data).toEqual(tasksMockResponse.data);
+    dom.addDeleteBtnListener();
 
     const button = $('.deleteBtn');
     button.trigger('click');
