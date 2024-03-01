@@ -1,0 +1,56 @@
+{
+  "plugins": ["jest"],
+  "extends": [ "airbnb", "eslint:recommended", "plugin:jest/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jquery": true,
+    "jest": true
+  },
+  "globals": {
+    "Dialog": "readonly",
+    "Helper": "readonly",
+    "eLabSDK": "readonly",
+    "Class": "readonly",
+    "Options": "readonly",
+    "Events": "readonly"
+  },
+  "rules": {
+    "consistent-return": "off",
+    "no-underscore-dangle": "off",
+    "import/extensions": "off",
+    "func-names": "off",
+    "no-extra-boolean-cast": "off",
+    "no-restricted-syntax": "off",
+    "arrow-body-style": "off",
+    "operator-assignment": "off",
+    "prefer-destructuring": "off",
+    "no-plusplus": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "max-len": ["error", { "code": 100, "ignoreComments": true }],
+    "no-param-reassign": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "./src/date.js"
+      ],
+      "rules": {
+        "import/prefer-default-export": "off"
+      }
+    },
+    {
+      "files": ["tests/**/*"],
+      "plugins": ["jest"],
+      "env": {
+        "jest/globals": true
+      }
+    }
+  ]
+}

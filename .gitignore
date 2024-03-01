@@ -1,0 +1,12 @@
+.idea
+node_modules
+scratch
+
+dist/*
+.parcel-cache/*
+
+.eslintcache
+!/**/.gitkeep
+
+cert.pem
+key.pem
